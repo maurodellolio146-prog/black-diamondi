@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLACK DIAMOND</title>
+
+<style>
+    :root {
+        --bg: #000;
+        --panel: #0d0d0d;
+        --border: #333;
+        --gold: #d4af37;
+        --gold-soft: #f5e29f;
+        --text-main: #ffffff;
+        --text-soft: #bbbbbb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+        font-family: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        background: radial-gradient(circle at top, #1a1a1a 0, #000 45%, #000 100%);
+        color: var(--text-main);
+        margin: 0;
+        padding: 0 0 70px 0; /* spazio per footer fisso */
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 540px;
+        margin: 0 auto;
+        padding: 24px 20px 16px;
+        flex: 1;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        font-weight: 800;
+        color: var(--gold);
+        font-size: 2.1rem;
+        letter-spacing: 1.5px;
+        margin: 0 0 6px;
+        text-transform: uppercase;
+    }
+
+    #testTitle {
+        font-size: 1rem;
+        color: var(--text-soft);
+        margin-bottom: 4px;
+    }
+
+    #subtitle {
+        font-size: 0.9rem;
+        color: var(--text-soft);
+        margin-bottom: 18px;
+    }
+
+    .panel {
+        background: linear-gradient(145deg, #050505, #141414);
+        border-radius: 18px;
+        border: 1px solid var(--border);
+        padding: 18px 16px 20px;
+        box-shadow: 0 18px 40px rgba(0,0,0,0.7);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .progress-wrapper {
+        width: 100%;
+        background: #101010;
+        border-radius: 999px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        margin-bottom: 12px;
+    }
+
+    .progress-bar {
+        width: 0%;
+        height: 10px;
+        background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+        transition: width 0.35s ease-out;
+    }
+
+    #counter {
+        text-align: center;
+        font-size: 0.9rem;
+        color: var(--text-soft);
+        margin-bottom: 16px;
+        font-weight: 500;
+    }
+
+    #questionText {
+        font-size: 1.18rem;
+        line-height: 1.6;
+        font-weight: 500;
+        margin-bottom: 16px;
+        color: #f2f2f2;
+    }
+
+    .answer {
+        width: 100%;
+        padding: 14px 16px;
+        margin-bottom: 12px;
+        background: linear-gradient(145deg, #111, #1b1b1b);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        color: #ffffff;
+        font-size: 1.02rem;
+        font-weight: 600;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.25s;
+        box-shadow: 0 0 14px rgba(212,175,55,0.18);
+    }
+
+    .answer:hover {
+        background: var(--gold);
+        color: #000;
+        transform: translateY(-3px);
+        box-shadow: 0 0 18px rgba(212,175,55,0.4);
+    }
+
+    .answer:active {
+        transform: scale(0.96);
+    }
+
+    .result {
+        display: none;
+        margin-top: 26px;
+        padding: 20px 18px 22px;
+        border-radius: 18px;
+        background: linear-gradient(145deg, #0b0b0b, #151515);
+        border: 1px solid var(--border);
+        box-shadow: 0 18px 40px rgba(0,0,0,0.8);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .result h2 {
+        color: var(--gold);
+        margin-top: 0;
+        font-size: 1.6rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .result h3 {
+        margin-top: 16px;
+        margin-bottom: 6px;
+        font-size: 1.02rem;
+        color: #f5f5f5;
+    }
+
+    .result p {
+        margin: 4px 0 8px;
+        font-size: 0.96rem;
+        color: #e0e0e0;
+        line-height: 1.55;
+    }
+
+    .octagon-wrapper {
+        display: flex;
+        justify-content: center;
+        margin: 14px 0 6px;
+    }
+
+    .octagon {
+        width: 180px;
+        height: 180px;
+        background: radial-gradient(circle at top, #fff7d1 0, #d4af37 40%, #b38b22 100%);
+        clip-path: polygon(
+            30% 0%, 70% 0%,
+            100% 30%, 100% 70%,
+            70% 100%, 30% 100%,
+            0% 70%, 0% 30%
+        );
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #000;
+        font-weight: 800;
+        font-size: 1.02rem;
+        text-align: center;
+        padding: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 0 26px rgba(212,175,55,0.7);
+    }
+
+    .profiles-section {
+        margin-top: 30px;
+        padding: 18px 16px 20px;
+        border-radius: 18px;
+        background: linear-gradient(145deg, #050505, #101010);
+        border: 1px solid var(--border);
+    }
+
+    .profiles-section h2 {
+        margin-top: 0;
+        color: var(--gold);
+        font-size: 1.3rem;
+        text-align: center;
+        margin-bottom: 8px;
+    }
+
+    .profiles-section p {
+        font-size: 0.9rem;
+        color: var(--text-soft);
+        text-align: center;
+        margin-bottom: 16px;
+    }
+
+    /* Pulsanti personalità retroilluminati */
+    .profile-list-item {
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid rgba(212,175,55,0.35);
+        margin-bottom: 12px;
+        background: radial-gradient(circle at top left, #1b1b1b 0, #050505 60%);
+        cursor: pointer;
+        transition: 0.22s ease-out;
+        box-shadow: 0 0 10px rgba(212,175,55,0.18);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-list-item::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at top left, rgba(212,175,55,0.18), transparent 55%);
+        opacity: 0;
+        transition: opacity 0.25s ease-out;
+        pointer-events: none;
+    }
+
+    .profile-list-item:hover::before {
+        opacity: 1;
+    }
+
+    .profile-list-item:hover {
+        border-color: var(--gold);
+        box-shadow: 0 0 18px rgba(212,175,55,0.45);
+        transform: translateY(-2px);
+    }
+
+    .profile-list-item.active {
+        border-color: var(--gold);
+        box-shadow: 0 0 22px rgba(212,175,55,0.6);
+    }
+
+    .profile-name-main {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 2px;
+    }
+
+    .profile-name {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--gold-soft);
+    }
+
+    .profile-tagline {
+        font-size: 0.84rem;
+        color: var(--text-soft);
+        margin-top: 2px;
+    }
+
+    .profile-detail {
+        display: none;
+        margin-top: 18px;
+        padding: 16px 14px 18px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: #090909;
+    }
+
+    .profile-detail h3 {
+        margin-top: 0;
+        color: var(--gold);
+        font-size: 1.1rem;
+        margin-bottom: 6px;
+    }
+
+    .profile-detail h4 {
+        margin-top: 12px;
+        margin-bottom: 4px;
+        font-size: 0.98rem;
+        color: #f5f5f5;
+    }
+
+    .profile-detail p {
+        font-size: 0.9rem;
+        color: #e0e0e0;
+        margin: 3px 0 6px;
+        line-height: 1.5;
+    }
+
+    /* FOOTER DINAMICO NON INVADENTE */
+    footer {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 14px;
+        font-size: 0.86rem;
+        color: var(--text-soft);
+        background: rgba(0,0,0,0.78);
+        border-top: 1px solid rgba(212,175,55,0.55);
+        box-shadow: 0 0 18px rgba(0,0,0,0.8);
+        backdrop-filter: blur(6px);
+        z-index: 50;
+        opacity: 0;
+        transform: translateY(100%);
+        transition: opacity 0.4s ease-out, transform 0.4s ease-out, box-shadow 0.3s ease-out;
+    }
+
+    footer span {
+        color: var(--gold);
+        font-weight: 600;
+    }
+
+    footer.footer-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    footer.footer-glow {
+        box-shadow: 0 0 22px rgba(212,175,55,0.55);
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <header>
+        <h1>BLACK DIAMOND</h1>
+        <div id="testTitle">Test di Personalità — 20 Domande</div>
+        <div id="subtitle">Scopri il tuo profilo su 4 assi: Identità, Energia, Mente, Azione.</div>
+    </header>
+
+    <div class="panel">
+        <div class="progress-wrapper">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div id="counter">Domanda <span id="currentNum">1</span> di <span id="totalNum">20</span></div>
+
+        <div id="questionBox">
+            <p id="questionText"></p>
+            <div id="answers"></div>
+        </div>
+    </div>
+
+    <div class="result" id="resultBox">
+        <h2>Il tuo profilo</h2>
+
+        <div class="octagon-wrapper">
+            <div class="octagon" id="octagonLabel">Profilo</div>
+        </div>
+
+        <h3>Punti di forza</h3>
+        <p id="resultPro"></p>
+
+        <h3>Punti deboli</h3>
+        <p id="resultContro"></p>
+
+        <h3>Come migliorare</h3>
+        <p id="resultImprove"></p>
+
+        <h3>Percorso consigliato</h3>
+        <p id="resultPath"></p>
+
+        <h3>Profili simili a te</h3>
+        <p id="resultSimilar"></p>
+
+        <h3>Profili opposti al tuo</h3>
+        <p id="resultOpposite"></p>
+    </div>
+
+    <!-- SEZIONE 16 PERSONALITÀ (lista verticale elegante) -->
+    <div class="profiles-section" id="profilesSection" style="display:none;">
+        <h2>Esplora le 16 Personalità</h2>
+        <p>Clicca su una personalità per vedere dettagli, punti di forza, punti deboli e confronto con il tuo profilo.</p>
+
+        <div id="profilesList"></div>
+
+        <div class="profile-detail" id="profileDetail">
+            <h3 id="detailTitle"></h3>
+            <p id="detailTagline"></p>
+
+            <h4>Punti di forza</h4>
+            <p id="detailPro"></p>
+
+            <h4>Punti deboli</h4>
+            <p id="detailContro"></p>
+
+            <h4>Come migliorare</h4>
+            <p id="detailImprove"></p>
+
+            <h4>Percorso consigliato</h4>
+            <p id="detailPath"></p>
+
+            <h4>Confronto con il tuo profilo attuale</h4>
+            <p id="detailCompare"></p>
+
+            <h4>Profili simili</h4>
+            <p id="detailSimilar"></p>
+
+            <h4>Profili opposti</h4>
+            <p id="detailOpposite"></p>
+        </div>
+    </div>
+</div>
+
+<footer id="mainFooter">
+    © <span>2026</span> — Creato da <span>Mauro Dell'Olio</span>. Tutti i diritti riservati.
+</footer>
+
+<script>
+    const TOTAL_QUESTIONS = 20;
+    document.getElementById("totalNum").innerText = TOTAL_QUESTIONS;
+
+    let current = 1;
+    let answers = [];
+    let currentProfileKey = null;
+    let lastActiveProfileItem = null;
+
+    const questions = [
+        // IDENTITÀ
+        { axis: "identità", q: "Ti senti più ispiratore o realizzatore?", a: ["Ispiratore", "Realizzatore"], v: ["Visionario", "Operativo"] },
+        { axis: "identità", q: "Preferisci creare idee o eseguire piani?", a: ["Creare idee", "Eseguire piani"], v: ["Visionario", "Operativo"] },
+        { axis: "identità", q: "Ti motiva di più immaginare il futuro o organizzare il presente?", a: ["Immaginare il futuro", "Organizzare il presente"], v: ["Visionario", "Operativo"] },
+        { axis: "identità", q: "Ti senti più trascinatore o stabilizzatore?", a: ["Trascinatore", "Stabilizzatore"], v: ["Visionario", "Operativo"] },
+        { axis: "identità", q: "Preferisci innovare o ottimizzare?", a: ["Innovare", "Ottimizzare"], v: ["Visionario", "Operativo"] },
+
+        // ENERGIA
+        { axis: "energia", q: "Reagisci più con impulso o con calma?", a: ["Impulso", "Calma"], v: ["Fuoco", "Ghiaccio"] },
+        { axis: "energia", q: "Ti senti più esplosivo o costante?", a: ["Esplosivo", "Costante"], v: ["Fuoco", "Ghiaccio"] },
+        { axis: "energia", q: "Sotto pressione ti accendi o ti raffreddi?", a: ["Mi accendo", "Mi raffreddo"], v: ["Fuoco", "Ghiaccio"] },
+        { axis: "energia", q: "Preferisci sprint o maratone?", a: ["Sprint", "Maratone"], v: ["Fuoco", "Ghiaccio"] },
+        { axis: "energia", q: "Ti riconosci più in intensità o continuità?", a: ["Intensità", "Continuità"], v: ["Fuoco", "Ghiaccio"] },
+
+        // MENTE
+        { axis: "mente", q: "Ti affidi più ai dati o alle sensazioni?", a: ["Dati", "Sensazioni"], v: ["Analitico", "Intuitivo"] },
+        { axis: "mente", q: "Ti senti più strutturato o creativo?", a: ["Strutturato", "Creativo"], v: ["Analitico", "Intuitivo"] },
+        { axis: "mente", q: "Preferisci pianificare o improvvisare?", a: ["Pianificare", "Improvvisare"], v: ["Analitico", "Intuitivo"] },
+        { axis: "mente", q: "Ti riconosci più in chi analizza o percepisce?", a: ["Analizza", "Percepisce"], v: ["Analitico", "Intuitivo"] },
+        { axis: "mente", q: "Ti rassicura più avere schemi o libertà?", a: ["Schemi", "Libertà"], v: ["Analitico", "Intuitivo"] },
+
+        // AZIONE
+        { axis: "azione", q: "Davanti a un’opportunità ti butti o aspetti?", a: ["Mi butto", "Aspetto"], v: ["Rischio", "Sicurezza"] },
+        { axis: "azione", q: "Ti senti più esploratore o custode?", a: ["Esploratore", "Custode"], v: ["Rischio", "Sicurezza"] },
+        { axis: "azione", q: "Preferisci provare subito o prepararti a lungo?", a: ["Provare subito", "Prepararmi"], v: ["Rischio", "Sicurezza"] },
+        { axis: "azione", q: "Ti riconosci più in chi sperimenta o protegge?", a: ["Sperimenta", "Protegge"], v: ["Rischio", "Sicurezza"] },
+        { axis: "azione", q: "Ti è più naturale rischiare o preservare?", a: ["Rischiare", "Preservare"], v: ["Rischio", "Sicurezza"] }
+    ];
+
+    const profiles = {
+        "Visionario_Fuoco_Analitico_Rischio": {
+            name: "Il Creatore Strategico",
+            label: "Visionario • Fuoco • Analitico • Rischio",
+            tagline: "Il Creatore Strategico ad Alta Intensità",
+            pro: "Vedi lontano, ti muovi veloce, prendi decisioni con lucidità e coraggio. Unisci visione, energia e logica. Sei un catalizzatore di cambiamento che trascina persone, progetti e risultati.",
+            contro: "Impazienza, sovraccarico di progetti, difficoltà a delegare, eccesso di controllo, rischio di burnout se non ti fermi mai, rigidità nelle aspettative verso te stesso e gli altri.",
+            improve: "Definisci limiti chiari, inserisci pause strutturate, delega in modo consapevole, accetta l’errore come parte del processo, comunica meglio il tuo perché, cura le relazioni e ascolta i feedback.",
+            path: "Leadership strategica, gestione dell’energia, costruzione di team forti, revisione settimanale delle priorità, taglio di ciò che non è essenziale, crescita su pazienza, empatia e ascolto."
+        },
+        "Visionario_Fuoco_Analitico_Sicurezza": {
+            name: "Il Visionario Controllato",
+            label: "Visionario • Fuoco • Analitico • Sicurezza",
+            tagline: "Il Visionario Controllato",
+            pro: "Unisci visione, energia e logica con senso di protezione e controllo. Sai pianificare, valutare rischi e costruire basi solide prima di muoverti.",
+            contro: "Eccesso di prudenza, paura del fallimento, tendenza a pensare troppo prima di agire, rischio di perdere opportunità per eccesso di analisi.",
+            improve: "Allena il rischio calcolato, sperimenta in piccolo, accetta l’errore come feedback, fissa scadenze per decidere, non solo per analizzare.",
+            path: "Percorsi su decision making rapido, gestione della paura, sperimentazione guidata, piccoli test sul campo con revisione periodica."
+        },
+        "Visionario_Fuoco_Intuitivo_Rischio": {
+            name: "L’Innovatore Esplosivo",
+            label: "Visionario • Fuoco • Intuitivo • Rischio",
+            tagline: "L’Innovatore Esplosivo",
+            pro: "Creatività esplosiva, coraggio, capacità di rompere gli schemi e ispirare gli altri. Vedi possibilità ovunque e ti muovi con entusiasmo.",
+            contro: "Discontinuità, dispersione, difficoltà a chiudere ciò che inizi, impulsività nelle decisioni, caos organizzativo.",
+            improve: "Definisci poche priorità, crea routine minime, struttura i progetti, affiancati a profili più analitici che ti aiutino a chiudere.",
+            path: "Project management leggero, abitudini quotidiane, focus su pochi obiettivi, revisione settimanale delle azioni."
+        },
+        "Visionario_Fuoco_Intuitivo_Sicurezza": {
+            name: "Il Visionario Sensibile",
+            label: "Visionario • Fuoco • Intuitivo • Sicurezza",
+            tagline: "Il Visionario Sensibile",
+            pro: "Intuizioni forti, energia emotiva, sensibilità verso le persone. Sai motivare e toccare corde profonde.",
+            contro: "Oscillazioni emotive, dubbi interni, paura di esporsi troppo, rischio di blocco quando ti senti insicuro.",
+            improve: "Stabilisci criteri semplici per decidere, lavora sulla fiducia in te, esporsi gradualmente con piccoli passi fuori dalla comfort zone.",
+            path: "Percorsi su autostima, gestione delle emozioni, comunicazione autentica, journaling e feedback da persone di fiducia."
+        },
+        "Visionario_Ghiaccio_Analitico_Rischio": {
+            name: "Il Visionario Strategico",
+            label: "Visionario • Ghiaccio • Analitico • Rischio",
+            tagline: "Il Visionario Strategico",
+            pro: "Visione lucida, mente strategica, capacità di rischiare in modo calcolato. Sai costruire piani solidi e ragionati.",
+            contro: "Tendenza a restare troppo nella testa, poca azione concreta, distanza emotiva, difficoltà a improvvisare.",
+            improve: "Fissa scadenze per decidere, allenati a fare piccoli test anche con informazioni incomplete, apriti di più emotivamente.",
+            path: "Esecuzione disciplinata, obiettivi a breve termine, prototipi, test rapidi, formazione su comunicazione e leadership."
+        },
+        "Visionario_Ghiaccio_Analitico_Sicurezza": {
+            name: "Il Visionario Perfettista",
+            label: "Visionario • Ghiaccio • Analitico • Sicurezza",
+            tagline: "Il Visionario Perfettista",
+            pro: "Grande controllo, visione strutturata, pianificazione dettagliata, precisione e ordine.",
+            contro: "Perfezionismo, lentezza nelle decisioni, paura di sbagliare, difficoltà a partire se non è tutto perfetto.",
+            improve: "Accetta il buono abbastanza, sperimenta in piccolo, lavora sulla flessibilità, impara a cambiare in corsa.",
+            path: "Decision making rapido, versioni beta, iterazioni, percorsi su gestione del perfezionismo e agilità mentale."
+        },
+        "Visionario_Ghiaccio_Intuitivo_Rischio": {
+            name: "L’Intuitivo Strategico",
+            label: "Visionario • Ghiaccio • Intuitivo • Rischio",
+            tagline: "L’Intuitivo Strategico",
+            pro: "Intuizioni profonde, sangue freddo, coraggio selettivo. Vai oltre la superficie e agisci quando senti che è il momento.",
+            contro: "Eccesso di attesa, chiusura, difficoltà a spiegare le tue scelte, rischio di muoverti solo quando ti senti sicuro al 100%.",
+            improve: "Comunica di più ciò che percepisci, agisci anche senza certezza totale, cerca feedback per confrontare intuizioni e realtà.",
+            path: "Formazione su comunicazione e leadership empatica, decisioni con tempi limite, condivisione delle tue percezioni."
+        },
+        "Visionario_Ghiaccio_Intuitivo_Sicurezza": {
+            name: "Il Visionario Calmo",
+            label: "Visionario • Ghiaccio • Intuitivo • Sicurezza",
+            tagline: "Il Visionario Calmo",
+            pro: "Profondità, calma, capacità di leggere persone e situazioni. Hai un mondo interiore ricco e stabile.",
+            contro: "Poca azione, paura di esporsi, tendenza a rimandare, rischio di restare troppo nel pensiero.",
+            improve: "Metti in agenda azioni concrete, esporsi gradualmente, definisci obiettivi pratici oltre agli stati interiori.",
+            path: "Assertività, gestione della paura, piccoli impegni pubblici, responsabilità crescenti nel tempo."
+        },
+        "Operativo_Fuoco_Analitico_Rischio": {
+            name: "Il Guerriero Strategico",
+            label: "Operativo • Fuoco • Analitico • Rischio",
+            tagline: "Il Guerriero Strategico",
+            pro: "Azione, disciplina, logica. Fai accadere le cose, tieni il ritmo anche sotto pressione, analizzi rapidamente cosa funziona.",
+            contro: "Stress elevato, poca pazienza con i lenti, rischio di trascurare te stesso, tendenza a spingere sempre.",
+            improve: "Inserisci pause obbligatorie, ascolta il corpo, modula la pressione sugli altri, impara a dire no.",
+            path: "Gestione dello stress, leadership umana, momenti di decompressione, attività rigenerative programmate."
+        },
+        "Operativo_Fuoco_Intuitivo_Rischio": {
+            name: "L’Azione Ispirata",
+            label: "Operativo • Fuoco • Intuitivo • Rischio",
+            tagline: "L’Azione Ispirata",
+            pro: "Reattività, intuito pratico, capacità di adattarti e reagire al volo alle situazioni.",
+            contro: "Impulsività, discontinuità, fatica a pianificare, rischio di agire senza una direzione chiara.",
+            improve: "Fermati 30 secondi prima di agire, crea micro-piani, affiancati a profili più strutturati.",
+            path: "Gestione del focus, decisioni consapevoli, brevi momenti di riflessione quotidiana."
+        },
+        "Operativo_Ghiaccio_Analitico_Sicurezza": {
+            name: "La Macchina Perfetta",
+            label: "Operativo • Ghiaccio • Analitico • Sicurezza",
+            tagline: "La Macchina Perfetta",
+            pro: "Affidabilità, precisione, metodo. Ami strutture, procedure e chiarezza, sei costante e stabile.",
+            contro: "Rigidità, paura del nuovo, eccesso di controllo, resistenza al cambiamento.",
+            improve: "Sperimenta piccoli cambiamenti, accetta che il cambiamento è inevitabile, apriti a nuove idee.",
+            path: "Gestione del cambiamento, flessibilità, provare una cosa nuova ogni settimana."
+        },
+        "Operativo_Ghiaccio_Intuitivo_Sicurezza": {
+            name: "Il Custode Sensibile",
+            label: "Operativo • Ghiaccio • Intuitivo • Sicurezza",
+            tagline: "Il Custode Sensibile",
+            pro: "Empatia, calma, protezione. Sei un punto fermo per gli altri, ti prendi cura e sostieni.",
+            contro: "Tendenza al sacrificio, difficoltà a dire no, poca iniziativa personale, rischio di metterti sempre in secondo piano.",
+            improve: "Definisci confini chiari, dai valore ai tuoi bisogni, allena il no rispettoso.",
+            path: "Assertività, autostima, piccoli no quotidiani dove prima avresti detto sì."
+        },
+        "Operativo_Ghiaccio_Analitico_Rischio": {
+            name: "Il Calcolatore Audace",
+            label: "Operativo • Ghiaccio • Analitico • Rischio",
+            tagline: "Il Calcolatore Audace",
+            pro: "Lucidità, rischio calcolato, esecuzione precisa. Vedi pro e contro con chiarezza.",
+            contro: "Blocco da analisi, distanza emotiva, difficoltà a seguire l’intuizione, tendenza a voler sempre prove.",
+            improve: "Stabilisci tempi massimi per decidere, allena l’ascolto delle sensazioni, apriti di più nelle relazioni.",
+            path: "Decisioni rapide, intelligenza emotiva, piccoli rischi senza tutte le informazioni."
+        },
+        "Operativo_Fuoco_Analitico_Sicurezza": {
+            name: "Il Motore Controllato",
+            label: "Operativo • Fuoco • Analitico • Sicurezza",
+            tagline: "Il Motore Controllato",
+            pro: "Energia e concretezza con attenzione al controllo. Vuoi risultati, ma senza mettere tutto a rischio.",
+            contro: "Tensione interna tra spinta e prudenza, stress mentale, difficoltà a mollare il controllo.",
+            improve: "Chiarisci i tuoi criteri di rischio, accetta che non tutto è controllabile, impara a fidarti del processo.",
+            path: "Gestione dell’ansia da controllo, leadership, delega progressiva e piccoli rischi consapevoli."
+        },
+        "Operativo_Fuoco_Intuitivo_Sicurezza": {
+            name: "L’Operativo Empatico",
+            label: "Operativo • Fuoco • Intuitivo • Sicurezza",
+            tagline: "L’Operativo Empatico",
+            pro: "Coinvolgimento, sensibilità, azione. Sai trascinare le persone e percepire l’energia del gruppo.",
+            contro: "Oscillazioni emotive, fatica a mantenere costanza, difficoltà a strutturare.",
+            improve: "Crea routine semplici, non dipendere solo dall’umore, affiancati a profili più analitici.",
+            path: "Gestione delle emozioni, disciplina, piccoli impegni quotidiani mantenuti nel tempo."
+        },
+        "Operativo_Ghiaccio_Intuitivo_Rischio": {
+            name: "L’Esploratore Silenzioso",
+            label: "Operativo • Ghiaccio • Intuitivo • Rischio",
+            tagline: "L’Esploratore Silenzioso",
+            pro: "Profondità interiore, calma sotto pressione, coraggio silenzioso. Fai cose che altri non vedono.",
+            contro: "Isolamento, poca comunicazione, rischio di essere sottovalutato.",
+            improve: "Condividi di più ciò che senti e pensi, cerca alleanze, dai voce alle tue idee.",
+            path: "Comunicazione, teamwork, parlare di più in riunioni e chiedere feedback."
+        },
+        "default": {
+            name: "Profilo Ibrido",
+            label: "Profilo ibrido",
+            tagline: "Un profilo flessibile e adattivo",
+            pro: "Flessibilità, capacità di adattarti a contesti diversi, visione ampia delle situazioni.",
+            contro: "Rischio di non riconoscerti in un ruolo preciso, dispersione di energia.",
+            improve: "Scegli una direzione prioritaria su cui investire nei prossimi mesi.",
+            path: "Definizione di visione personale, obiettivi chiari, disciplina quotidiana."
+        }
+    };
+
+    const similarMap = {
+        "Visionario_Fuoco_Analitico_Rischio": ["Visionario_Fuoco_Intuitivo_Rischio", "Visionario_Fuoco_Analitico_Sicurezza"],
+        "Visionario_Fuoco_Analitico_Sicurezza": ["Visionario_Ghiaccio_Analitico_Sicurezza", "Visionario_Fuoco_Analitico_Rischio"],
+        "Visionario_Fuoco_Intuitivo_Rischio": ["Visionario_Fuoco_Intuitivo_Sicurezza", "Visionario_Fuoco_Analitico_Rischio"],
+        "Visionario_Fuoco_Intuitivo_Sicurezza": ["Visionario_Ghiaccio_Intuitivo_Sicurezza", "Visionario_Fuoco_Intuitivo_Rischio"],
+        "Visionario_Ghiaccio_Analitico_Rischio": ["Visionario_Ghiaccio_Analitico_Sicurezza", "Visionario_Fuoco_Analitico_Rischio"],
+        "Visionario_Ghiaccio_Analitico_Sicurezza": ["Visionario_Ghiaccio_Analitico_Rischio", "Operativo_Ghiaccio_Analitico_Sicurezza"],
+        "Visionario_Ghiaccio_Intuitivo_Rischio": ["Visionario_Ghiaccio_Intuitivo_Sicurezza", "Visionario_Fuoco_Intuitivo_Rischio"],
+        "Visionario_Ghiaccio_Intuitivo_Sicurezza": ["Visionario_Fuoco_Intuitivo_Sicurezza", "Operativo_Ghiaccio_Intuitivo_Sicurezza"],
+        "Operativo_Fuoco_Analitico_Rischio": ["Operativo_Fuoco_Analitico_Sicurezza", "Visionario_Fuoco_Analitico_Rischio"],
+        "Operativo_Fuoco_Intuitivo_Rischio": ["Operativo_Fuoco_Intuitivo_Sicurezza", "Visionario_Fuoco_Intuitivo_Rischio"],
+        "Operativo_Ghiaccio_Analitico_Sicurezza": ["Visionario_Ghiaccio_Analitico_Sicurezza", "Operativo_Ghiaccio_Analitico_Rischio"],
+        "Operativo_Ghiaccio_Intuitivo_Sicurezza": ["Visionario_Ghiaccio_Intuitivo_Sicurezza", "Operativo_Ghiaccio_Intuitivo_Rischio"],
+        "Operativo_Ghiaccio_Analitico_Rischio": ["Operativo_Ghiaccio_Analitico_Sicurezza", "Visionario_Ghiaccio_Analitico_Rischio"],
+        "Operativo_Fuoco_Analitico_Sicurezza": ["Operativo_Fuoco_Analitico_Rischio", "Visionario_Fuoco_Analitico_Sicurezza"],
+        "Operativo_Fuoco_Intuitivo_Sicurezza": ["Operativo_Fuoco_Intuitivo_Rischio", "Operativo_Ghiaccio_Intuitivo_Sicurezza"],
+        "Operativo_Ghiaccio_Intuitivo_Rischio": ["Visionario_Ghiaccio_Intuitivo_Rischio", "Operativo_Ghiaccio_Intuitivo_Sicurezza"]
+    };
+
+    const oppositeMap = {
+        "Visionario_Fuoco_Analitico_Rischio": ["Operativo_Ghiaccio_Intuitivo_Sicurezza", "Operativo_Ghiaccio_Analitico_Sicurezza"],
+        "Visionario_Fuoco_Analitico_Sicurezza": ["Operativo_Ghiaccio_Intuitivo_Rischio", "Operativo_Ghiaccio_Intuitivo_Sicurezza"],
+        "Visionario_Fuoco_Intuitivo_Rischio": ["Operativo_Ghiaccio_Analitico_Sicurezza", "Operativo_Ghiaccio_Intuitivo_Sicurezza"],
+        "Visionario_Fuoco_Intuitivo_Sicurezza": ["Operativo_Ghiaccio_Analitico_Rischio", "Operativo_Fuoco_Analitico_Rischio"],
+        "Visionario_Ghiaccio_Analitico_Rischio": ["Operativo_Fuoco_Intuitivo_Sicurezza", "Operativo_Fuoco_Intuitivo_Rischio"],
+        "Visionario_Ghiaccio_Analitico_Sicurezza": ["Operativo_Fuoco_Intuitivo_Rischio", "Operativo_Fuoco_Intuitivo_Sicurezza"],
+        "Visionario_Ghiaccio_Intuitivo_Rischio": ["Operativo_Fuoco_Analitico_Sicurezza", "Operativo_Fuoco_Analitico_Rischio"],
+        "Visionario_Ghiaccio_Intuitivo_Sicurezza": ["Operativo_Fuoco_Analitico_Rischio", "Operativo_Fuoco_Intuitivo_Rischio"],
+        "Operativo_Fuoco_Analitico_Rischio": ["Visionario_Ghiaccio_Intuitivo_Sicurezza", "Visionario_Ghiaccio_Intuitivo_Rischio"],
+        "Operativo_Fuoco_Intuitivo_Rischio": ["Visionario_Ghiaccio_Analitico_Sicurezza", "Operativo_Ghiaccio_Analitico_Sicurezza"],
+        "Operativo_Ghiaccio_Analitico_Sicurezza": ["Visionario_Fuoco_Intuitivo_Rischio", "Operativo_Fuoco_Intuitivo_Rischio"],
+        "Operativo_Ghiaccio_Intuitivo_Sicurezza": ["Visionario_Fuoco_Analitico_Rischio", "Operativo_Fuoco_Analitico_Rischio"],
+        "Operativo_Ghiaccio_Analitico_Rischio": ["Visionario_Fuoco_Intuitivo_Sicurezza", "Visionario_Fuoco_Intuitivo_Rischio"],
+        "Operativo_Fuoco_Analitico_Sicurezza": ["Visionario_Ghiaccio_Intuitivo_Sicurezza", "Visionario_Ghiaccio_Intuitivo_Rischio"],
+        "Operativo_Fuoco_Intuitivo_Sicurezza": ["Visionario_Ghiaccio_Analitico_Sicurezza", "Operativo_Ghiaccio_Analitico_Sicurezza"],
+        "Operativo_Ghiaccio_Intuitivo_Rischio": ["Visionario_Fuoco_Analitico_Rischio", "Operativo_Fuoco_Analitico_Rischio"]
+    };
+
+    function loadQuestion() {
+        const q = questions[current - 1];
+        document.getElementById("questionText").innerText = q.q;
+
+        const answersBox = document.getElementById("answers");
+        answersBox.innerHTML = "";
+
+        q.a.forEach((text, idx) => {
+            const div = document.createElement("div");
+            div.className = "answer";
+            div.innerText = text;
+            div.onclick = () => next(q.axis, q.v[idx]);
+            answersBox.appendChild(div);
+        });
+    }
+
+    function updateProgress() {
+        const percent = ((current - 1) / TOTAL_QUESTIONS) * 100;
+        document.getElementById("progressBar").style.width = percent + "%";
+        document.getElementById("currentNum").innerText = Math.min(current, TOTAL_QUESTIONS);
+    }
+
+    function next(axis, value) {
+        answers.push({ axis, value });
+
+        current++;
+        if (current > TOTAL_QUESTIONS) {
+            showResult();
+            return;
+        }
+
+        updateProgress();
+        loadQuestion();
+    }
+
+    function dominantValue(axis, a, b) {
+        const countA = answers.filter(x => x.axis === axis && x.value === a).length;
+        const countB = answers.filter(x => x.axis === axis && x.value === b).length;
+        if (countA > countB) return a;
+        if (countB > countA) return b;
+        return a; // in parità, primo polo
+    }
+
+    function buildKey(id, en, me, az) {
+        return `${id}_${en}_${me}_${az}`;
+    }
+
+    function showResult() {
+        document.getElementById("questionBox").style.display = "none";
+        document.getElementById("progressBar").style.width = "100%";
+        document.getElementById("counter").innerText = "Test completato";
+
+        const id = dominantValue("identità", "Visionario", "Operativo");
+        const en = dominantValue("energia", "Fuoco", "Ghiaccio");
+        const me = dominantValue("mente", "Analitico", "Intuitivo");
+        const az = dominantValue("azione", "Rischio", "Sicurezza");
+
+        const key = buildKey(id, en, me, az);
+        currentProfileKey = key;
+        const profile = profiles[key] || profiles["default"];
+
+        document.getElementById("octagonLabel").innerText = profile.label;
+        document.getElementById("resultPro").innerText = profile.pro;
+        document.getElementById("resultContro").innerText = profile.contro;
+        document.getElementById("resultImprove").innerText = profile.improve;
+        document.getElementById("resultPath").innerText = profile.path;
+
+        const similarKeys = similarMap[key] || [];
+        const oppositeKeys = oppositeMap[key] || [];
+
+        const similarText = similarKeys.length
+            ? similarKeys.map(k => profiles[k].label).join(" • ")
+            : "Profili simili non disponibili in questa versione.";
+        const oppositeText = oppositeKeys.length
+            ? oppositeKeys.map(k => profiles[k].label).join(" • ")
+            : "Profili opposti non disponibili in questa versione.";
+
+        document.getElementById("resultSimilar").innerText = similarText;
+        document.getElementById("resultOpposite").innerText = oppositeText;
+
+        document.getElementById("resultBox").style.display = "block";
+
+        buildProfilesList();
+        document.getElementById("profilesSection").style.display = "block";
+
+        const footer = document.getElementById("mainFooter");
+        footer.classList.add("footer-visible");
+    }
+
+    function buildProfilesList() {
+        const list = document.getElementById("profilesList");
+        list.innerHTML = "";
+
+        Object.keys(profiles).forEach(key => {
+            if (key === "default") return;
+            const p = profiles[key];
+            const item = document.createElement("div");
+            item.className = "profile-list-item";
+            item.onclick = () => showProfileDetail(key, item);
+
+            const nameMain = document.createElement("div");
+            nameMain.className = "profile-name-main";
+            nameMain.innerText = p.name;
+
+            const name = document.createElement("div");
+            name.className = "profile-name";
+            name.innerText = p.label;
+
+            const tagline = document.createElement("div");
+            tagline.className = "profile-tagline";
+            tagline.innerText = p.tagline;
+
+            item.appendChild(nameMain);
+            item.appendChild(name);
+            item.appendChild(tagline);
+            list.appendChild(item);
+        });
+    }
+
+    function compareProfiles(userKey, otherKey) {
+        if (!userKey || !otherKey) return "Confronto non disponibile.";
+
+        if (userKey === otherKey) {
+            return "Questo è il tuo profilo attuale: rappresenta esattamente il tuo modo di essere secondo il metodo Black Diamond.";
+        }
+
+        const u = userKey.split("_");
+        const o = otherKey.split("_");
+
+        const axesNames = ["Identità", "Energia", "Mente", "Azione"];
+        const similarities = [];
+        const differences = [];
+
+        for (let i = 0; i < 4; i++) {
+            if (u[i] === o[i]) {
+                similarities.push(`${axesNames[i]}: condividete il polo ${u[i]}.`);
+            } else {
+                differences.push(`${axesNames[i]}: tu sei ${u[i]}, questo profilo è ${o[i]}.`);
+            }
+        }
+
+        let text = "";
+        if (similarities.length) {
+            text += "Somiglianze: " + similarities.join(" ") + " ";
+        } else {
+            text += "Non condividete alcun asse principale. ";
+        }
+        if (differences.length) {
+            text += "Differenze: " + differences.join(" ");
+        }
+        return text;
+    }
+
+    function showProfileDetail(key, itemEl) {
+        const p = profiles[key];
+        const detail = document.getElementById("profileDetail");
+
+        if (lastActiveProfileItem) {
+            lastActiveProfileItem.classList.remove("active");
+        }
+        if (itemEl) {
+            itemEl.classList.add("active");
+            lastActiveProfileItem = itemEl;
+        }
+
+        document.getElementById("detailTitle").innerText = p.name + " — " + p.label;
+        document.getElementById("detailTagline").innerText = p.tagline;
+        document.getElementById("detailPro").innerText = p.pro;
+        document.getElementById("detailContro").innerText = p.contro;
+        document.getElementById("detailImprove").innerText = p.improve;
+        document.getElementById("detailPath").innerText = p.path;
+
+        const simKeys = similarMap[key] || [];
+        const oppKeys = oppositeMap[key] || [];
+
+        const simText = simKeys.length
+            ? simKeys.map(k => {
+                const sp = profiles[k];
+                return `${sp.name} (${sp.label}): ${sp.tagline}`;
+            }).join(" • ")
+            : "Nessun profilo simile definito.";
+
+        const oppText = oppKeys.length
+            ? oppKeys.map(k => {
+                const op = profiles[k];
+                return `${op.name} (${op.label}): ${op.tagline}`;
+            }).join(" • ")
+            : "Nessun profilo opposto definito.";
+
+        document.getElementById("detailSimilar").innerText = simText;
+        document.getElementById("detailOpposite").innerText = oppText;
+
+        const compareText = compareProfiles(currentProfileKey, key);
+        document.getElementById("detailCompare").innerText = compareText;
+
+        detail.style.display = "block";
+        detail.scrollIntoView({ behavior: "smooth", block: "start" });
+
+        const footer = document.getElementById("mainFooter");
+        footer.classList.add("footer-glow");
+        setTimeout(() => footer.classList.remove("footer-glow"), 900);
+    }
+
+    // avvio test
+    updateProgress();
+    loadQuestion();
+</script>
+
+</body>
+</html>
+
